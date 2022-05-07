@@ -93,6 +93,22 @@ class ValidatorTest extends TestCase
         ];
     }
 
+    public function twoNotIntsDataValidatorsProvider(): array
+    {
+        return [
+            [
+                [
+                    'id' => 'integer',
+                    'id2' => 'integer',
+                ],
+                [
+                    'id' => 'a',
+                    'id2' => 'b'
+                ],
+            ],
+        ];
+    }
+
     public function test_validatorWithEmptyRules(): void
     {
         $factory = Factory::getServerRequestFactory();
@@ -224,6 +240,27 @@ class ValidatorTest extends TestCase
                     ['id: Must be of type integer'],
                     $request->getAttribute('errors')
                 );
+            }
+        ], $requestWithData);
+    }
+
+    /**
+     * @dataProvider twoNotIntsDataValidatorsProvider
+     * @param array $validators
+     * @param array $data
+     * @return void
+     */
+    public function test_validatorProcess_withInvalidTwoInts(array $validators, array $data): void
+    {
+        $factory = Factory::getServerRequestFactory();
+        $request = $factory->createServerRequest('POST', '/');
+        $requestWithData = $request->withParsedBody($data);
+        $middleWare = new Validator($validators);
+        Dispatcher::run([
+            $middleWare,
+            function (ServerRequestInterface $request) {
+                $expected = ['id: Must be of type integer', 'id2: Must be of type integer'];
+                $this->assertEquals($expected, $request->getAttribute('errors'));
             }
         ], $requestWithData);
     }

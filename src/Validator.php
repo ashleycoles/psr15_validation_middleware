@@ -19,6 +19,8 @@ class Validator implements MiddlewareInterface
 
     protected ServerRequestInterface $request;
 
+    protected bool $valid = true;
+
     /**
      * @param array<string, string> $rules
      */
@@ -67,11 +69,11 @@ class Validator implements MiddlewareInterface
         foreach ($rules as $field => $type) {
             if (gettype($data[$field]) !== $type) {
                 $this->addError("$field: Must be of type $type");
-                return false;
+                $this->valid = false;
             }
         }
 
-        return true;
+        return $this->valid;
     }
 
     protected function addError(string $error): void

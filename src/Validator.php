@@ -67,8 +67,18 @@ class Validator implements MiddlewareInterface
      */
     protected function validate(object|array|null $data): bool
     {
-        if ((!is_array($data)) || empty($data) || count($this->rules) !== count($data)) {
+        if ((!is_array($data)) || empty($data)) {
             return false;
+        }
+
+        if (count($this->rules) !== count($data)) {
+            $extraDataItems = array_diff_key($data, $this->rules);
+
+            foreach ($extraDataItems as $field => $item) {
+                $this->addError("$field: Does not match data format.");
+                $this->valid = false;
+            }
+            return $this->valid;
         }
 
         foreach ($this->rules as $field => $type) {

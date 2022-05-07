@@ -116,6 +116,9 @@ class ValidatorTest extends TestCase
         ];
     }
 
+    /**
+     * @return void
+     */
     public function test_validatorWithEmptyRules(): void
     {
         $factory = Factory::getServerRequestFactory();
@@ -176,12 +179,19 @@ class ValidatorTest extends TestCase
      * @return void
      * @throws ReflectionException
      */
-    public function test_validatorValidateMethod_tooMuchData(array $validators, array $data): void
+    public function test_validatorProcess_tooMuchData(array $validators, array $data): void
     {
-        $validateMethod = self::getMethod('validate');
+        $factory = Factory::getServerRequestFactory();
+        $request = $factory->createServerRequest('POST', '/');
+        $requestWithData = $request->withParsedBody($data);
         $middleWare = new Validator($validators);
-        $valid = $validateMethod->invoke($middleWare, $validators, $data);
-        $this->assertFalse($valid);
+        Dispatcher::run([
+            $middleWare,
+            function (ServerRequestInterface $request) {
+                $expected = ['name: Does not match data format.',];
+                $this->assertEquals($expected, $request->getAttribute('errors'));
+            }
+        ], $requestWithData);
     }
 
     /**
@@ -258,6 +268,4 @@ class ValidatorTest extends TestCase
             }
         ], $requestWithData);
     }
-
-
 }

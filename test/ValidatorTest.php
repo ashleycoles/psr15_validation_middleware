@@ -165,12 +165,19 @@ class ValidatorTest extends TestCase
      * @return void
      * @throws ReflectionException
      */
-    public function test_validatorValidateMethod_emptyData(array $validators, array $data): void
+    public function test_validatorProcess_emptyData(array $validators, array $data): void
     {
-        $validateMethod = self::getMethod('validate');
+        $factory = Factory::getServerRequestFactory();
+        $request = $factory->createServerRequest('POST', '/');
+        $requestWithData = $request->withParsedBody($data);
         $middleWare = new Validator($validators);
-        $valid = $validateMethod->invoke($middleWare, $validators, $data);
-        $this->assertFalse($valid);
+        Dispatcher::run([
+            $middleWare,
+            function (ServerRequestInterface $request) {
+                $expected = ['id: Required field missing.'];
+                $this->assertEquals($expected, $request->getAttribute('errors'));
+            }
+        ], $requestWithData);
     }
 
     /**

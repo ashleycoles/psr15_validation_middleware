@@ -65,7 +65,7 @@ class Validator implements MiddlewareInterface
      */
     protected function validate(object|array|null $data): bool
     {
-        if ((!is_array($data)) || empty($data)) {
+        if ((!is_array($data))) {
             return false;
         }
 

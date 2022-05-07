@@ -147,19 +147,6 @@ class ValidatorTest extends TestCase
         ], $requestWithData);
     }
 
-    /**
-     * @dataProvider validValidatorsProvider
-     * @param array $validators
-     * @param array $data
-     * @throws ReflectionException
-     */
-    public function test_validatorValidateMethod_validData(array $validators, array $data): void
-    {
-        $validateMethod = self::getMethod('validate');
-        $middleWare = new Validator($validators);
-        $valid = $validateMethod->invoke($middleWare, $validators, $data);
-        $this->assertTrue($valid);
-    }
 
     /**
      * @dataProvider emptyDataValidatorsProvider

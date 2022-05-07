@@ -8,11 +8,21 @@ use Middlewares\Utils\Dispatcher;
 use Middlewares\Utils\Factory;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ServerRequestFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use ValidationMiddleware\Validator;
 
 class ValidatorTest extends TestCase
 {
+    private ServerRequestInterface $serverRequest;
+
+    public function __construct(?string $name = null, array $data = [], $dataName = '')
+    {
+        parent::__construct($name, $data, $dataName);
+        $factory = Factory::getServerRequestFactory();
+        $this->serverRequest = $factory->createServerRequest('POST', '/');
+    }
+
     /**
      * Helper to temporarily test protected methods.
      *
@@ -127,8 +137,6 @@ class ValidatorTest extends TestCase
      */
     public function test_validatorProcess_emptyRules(): void
     {
-        $factory = Factory::getServerRequestFactory();
-        $request = $factory->createServerRequest('POST', '/');
         $middleWare = new Validator([]);
 
         Dispatcher::run([
@@ -139,7 +147,7 @@ class ValidatorTest extends TestCase
                     $request->getAttribute('errors')
                 );
             }
-        ], $request);
+        ], $this->serverRequest);
     }
 
     /**
@@ -149,9 +157,7 @@ class ValidatorTest extends TestCase
      */
     public function test_validatorProcess_validData(array $validators, array $data): void
     {
-        $factory = Factory::getServerRequestFactory();
-        $request = $factory->createServerRequest('POST', '/');
-        $requestWithData = $request->withParsedBody($data);
+        $requestWithData = $this->serverRequest->withParsedBody($data);
         $middleWare = new Validator($validators);
 
         Dispatcher::run([
@@ -171,9 +177,7 @@ class ValidatorTest extends TestCase
      */
     public function test_validatorProcess_emptyData(array $validators, array $data): void
     {
-        $factory = Factory::getServerRequestFactory();
-        $request = $factory->createServerRequest('POST', '/');
-        $requestWithData = $request->withParsedBody($data);
+        $requestWithData = $this->serverRequest->withParsedBody($data);
         $middleWare = new Validator($validators);
         Dispatcher::run([
             $middleWare,
@@ -193,9 +197,7 @@ class ValidatorTest extends TestCase
      */
     public function test_validatorProcess_tooMuchData(array $validators, array $data): void
     {
-        $factory = Factory::getServerRequestFactory();
-        $request = $factory->createServerRequest('POST', '/');
-        $requestWithData = $request->withParsedBody($data);
+        $requestWithData = $this->serverRequest->withParsedBody($data);
         $middleWare = new Validator($validators);
         Dispatcher::run([
             $middleWare,
@@ -215,9 +217,7 @@ class ValidatorTest extends TestCase
      */
     public function test_validatorProcess_tooLittleData(array $validators, array $data): void
     {
-        $factory = Factory::getServerRequestFactory();
-        $request = $factory->createServerRequest('POST', '/');
-        $requestWithData = $request->withParsedBody($data);
+        $requestWithData = $this->serverRequest->withParsedBody($data);
         $middleWare = new Validator($validators);
         Dispatcher::run([
             $middleWare,
@@ -236,9 +236,7 @@ class ValidatorTest extends TestCase
      */
     public function test_validatorProcess_withInvalidSingleInt(array $validators, array $data): void
     {
-        $factory = Factory::getServerRequestFactory();
-        $request = $factory->createServerRequest('POST', '/');
-        $requestWithData = $request->withParsedBody($data);
+        $requestWithData = $this->serverRequest->withParsedBody($data);
         $middleWare = new Validator($validators);
 
         Dispatcher::run([
@@ -260,9 +258,7 @@ class ValidatorTest extends TestCase
      */
     public function test_validatorProcess_withInvalidTwoInts(array $validators, array $data): void
     {
-        $factory = Factory::getServerRequestFactory();
-        $request = $factory->createServerRequest('POST', '/');
-        $requestWithData = $request->withParsedBody($data);
+        $requestWithData = $this->serverRequest->withParsedBody($data);
         $middleWare = new Validator($validators);
         Dispatcher::run([
             $middleWare,

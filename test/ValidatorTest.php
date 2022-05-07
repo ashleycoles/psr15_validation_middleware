@@ -222,21 +222,6 @@ class ValidatorTest extends TestCase
      * @param array $validators
      * @param array $data
      * @return void
-     * @throws ReflectionException
-     */
-    public function test_validatorValidateMethod_singleDataNotInt(array $validators, array $data): void
-    {
-        $validateMethod = self::getMethod('validate');
-        $middleWare = new Validator($validators);
-        $valid = $validateMethod->invoke($middleWare, $validators, $data);
-        $this->assertFalse($valid);
-    }
-
-    /**
-     * @dataProvider notIntDataValidatorsProvider
-     * @param array $validators
-     * @param array $data
-     * @return void
      */
     public function test_validatorProcess_withInvalidSingleInt(array $validators, array $data): void
     {

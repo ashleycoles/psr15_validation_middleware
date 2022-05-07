@@ -24,8 +24,6 @@ class Validator implements MiddlewareInterface
 
     protected ServerRequestInterface $request;
 
-    protected bool $valid = true;
-
     protected RequestHandlerInterface $handler;
 
     /**
@@ -71,33 +69,34 @@ class Validator implements MiddlewareInterface
             return false;
         }
 
+        $valid = true;
+
         if (count($this->rules) !== count($data)) {
             if (count($data) < count($this->rules)) {
-                $this->valid = false;
                 $missingDataItems = array_diff_key($this->rules, $data);
                 foreach ($missingDataItems as $field => $item) {
                     $this->addError("$field: Required field missing.");
                 }
-                return $this->valid;
+                return false;
             }
 
             $extraDataItems = array_diff_key($data, $this->rules);
 
             foreach ($extraDataItems as $field => $item) {
                 $this->addError("$field: Does not match data format.");
-                $this->valid = false;
+                $valid = false;
             }
-            return $this->valid;
+            return $valid;
         }
 
         foreach ($this->rules as $field => $type) {
             if (gettype($data[$field]) !== $type) {
                 $this->addError("$field: Must be of type $type");
-                $this->valid = false;
+                $valid = false;
             }
         }
 
-        return $this->valid;
+        return $valid;
     }
 
     /**

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace ValidationMiddleware;
 
-use http\Env\Request;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;

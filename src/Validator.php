@@ -36,6 +36,9 @@ class Validator implements MiddlewareInterface
 
     protected function validate(array $rules, array $data): bool
     {
+        if (empty($data)) {
+            return false;
+        }
         return true;
     }
 }

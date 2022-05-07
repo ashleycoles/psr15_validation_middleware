@@ -37,6 +37,18 @@ class ValidatorTest extends TestCase
         ];
     }
 
+    public function emptyDataValidatorsProvider(): array
+    {
+        return [
+            [
+                [
+                    ['id' => 'int'],
+                ],
+                [],
+            ],
+        ];
+    }
+
     public function test_validatorWithEmptyRules()
     {
         $factory = Factory::getServerRequestFactory();
@@ -86,5 +98,19 @@ class ValidatorTest extends TestCase
         $middleWare = new Validator($validators);
         $valid = $validateMethod->invoke($middleWare, $validators, $data);
         $this->assertTrue($valid);
+    }
+
+    /**
+     * @dataProvider emptyDataValidatorsProvider
+     * @param array $validators
+     * @param array $data
+     * @return void
+     */
+    public function test_validatorValidateMethod_emptyData(array $validators, array $data)
+    {
+        $validateMethod = self::getMethod('validate');
+        $middleWare = new Validator($validators);
+        $valid = $validateMethod->invoke($middleWare, $validators, $data);
+        $this->assertFalse($valid);
     }
 }

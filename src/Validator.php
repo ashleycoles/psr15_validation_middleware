@@ -28,6 +28,9 @@ class Validator implements MiddlewareInterface
         RequestHandlerInterface $handler
     ): ResponseInterface
     {
+        if (empty($this->rules)) {
+            $request = $request->withAttribute('error', 'No rules set.');
+        }
         return $handler->handle($request);
     }
 }

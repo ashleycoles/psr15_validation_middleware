@@ -28,6 +28,23 @@ class ValidatorTest extends TestCase
         ];
     }
 
+    public function test_validatorWithEmptyRules()
+    {
+        $factory = Factory::getServerRequestFactory();
+        $request = $factory->createServerRequest('POST', '/');
+        $middleWare = new Validator([]);
+
+        Dispatcher::run([
+            $middleWare,
+            function (ServerRequestInterface $request) {
+                $this->assertEquals(
+                    'No rules set.',
+                    $request->getAttribute('error')
+                );
+            }
+        ], $request);
+    }
+
     /**
      * @dataProvider validValidatorsProvider
      * @param array $validators

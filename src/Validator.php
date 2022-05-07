@@ -31,16 +31,13 @@ class Validator implements MiddlewareInterface
         if (empty($this->rules)) {
             $request = $request->withAttribute('error', 'No rules set.');
         }
+
         return $handler->handle($request);
     }
 
     protected function validate(array $rules, array $data): bool
     {
-        if (empty($data)) {
-            return false;
-        }
-
-        if (count($rules) !== count($data)) {
+        if (empty($data) || count($rules) !== count($data)) {
             return false;
         }
 

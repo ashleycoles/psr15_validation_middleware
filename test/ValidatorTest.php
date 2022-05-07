@@ -9,6 +9,7 @@ use Middlewares\Utils\Factory;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use ValidationMiddlewear\Validator;
 
 class ValidatorTest extends TestCase
 {

@@ -14,10 +14,13 @@
     },
     "scripts": {
         "test": [
-            "@phpunit"
+            "@phpunit",
+            "@phpcs",
+            "@phpstan"
         ],
         "phpunit": "phpunit test/",
         "phpcs": "phpcs --standard=psr12 src/",
+        "phpcbf": "phpcbf --standard=psr12 src/",
         "phpstan": "phpstan analyse --level 9 src/"
     },
     "authors": [

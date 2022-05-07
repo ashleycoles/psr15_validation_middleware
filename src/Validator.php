@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+namespace ValidationMiddlewear;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -38,8 +39,7 @@ class Validator implements MiddlewareInterface
     public function process(
         ServerRequestInterface $request,
         RequestHandlerInterface $handler
-    ): ResponseInterface
-    {
+    ): ResponseInterface {
         if (empty($this->rules)) {
             $this->addError('No rules set.');
             $request = $request->withAttribute('errors', $this->errors);
@@ -47,7 +47,6 @@ class Validator implements MiddlewareInterface
         }
 
         $this->request = $request;
-
 
         $data = $this->request->getParsedBody();
 

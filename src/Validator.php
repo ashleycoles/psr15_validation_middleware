@@ -60,6 +60,8 @@ class Validator implements MiddlewareInterface
     }
 
     /**
+     * Validates an assoc array of data against an array of rules
+     *
      * @param object|array<string, string>|null $data
      * @return bool
      */
@@ -79,14 +81,27 @@ class Validator implements MiddlewareInterface
         return $this->valid;
     }
 
+    /**
+     * Adds a validation error message
+     *
+     * @param string $error
+     * @return void
+     */
     protected function addError(string $error): void
     {
         $this->errors[] = $error;
     }
 
+    /**
+     * Gather errors (if present) and handles the request
+     *
+     * @return ResponseInterface
+     */
     protected function handleRequest(): ResponseInterface
     {
-        $request = $this->request->withAttribute('errors', $this->errors);
-        return $this->handler->handle($request);
+        if (!empty($this->errors)) {
+            $this->request = $this->request->withAttribute('errors', $this->errors);
+        }
+        return $this->handler->handle($this->request);
     }
 }

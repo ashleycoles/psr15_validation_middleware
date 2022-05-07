@@ -71,15 +71,17 @@ class Validator implements MiddlewareInterface
 
         $valid = true;
 
-        if (count($this->rules) !== count($data)) {
-            if (count($data) < count($this->rules)) {
-                $missingDataItems = array_diff_key($this->rules, $data);
-                foreach ($missingDataItems as $field => $item) {
-                    $this->addError("$field: Required field missing.");
-                }
-                return false;
-            }
+        $ruleDataComparison = count($this->rules) <=> count($data);
 
+        if ($ruleDataComparison === 1) {
+            $missingDataItems = array_diff_key($this->rules, $data);
+            foreach ($missingDataItems as $field => $item) {
+                $this->addError("$field: Required field missing.");
+            }
+            return false;
+        }
+
+        if ($ruleDataComparison === -1) {
             $extraDataItems = array_diff_key($data, $this->rules);
 
             foreach ($extraDataItems as $field => $item) {

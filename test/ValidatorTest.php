@@ -65,7 +65,8 @@ class ValidatorTest extends TestCase
                 ],
                 [
                     'id' => 1,
-                    'name' => 'a'
+                    'name' => 'a',
+                    'rate' => 12.4
                 ],
             ],
         ];
@@ -188,7 +189,7 @@ class ValidatorTest extends TestCase
         Dispatcher::run([
             $middleWare,
             function (ServerRequestInterface $request) {
-                $expected = ['name: Does not match data format.',];
+                $expected = ['name: Does not match data format.', 'rate: Does not match data format.'];
                 $this->assertEquals($expected, $request->getAttribute('errors'));
             }
         ], $requestWithData);

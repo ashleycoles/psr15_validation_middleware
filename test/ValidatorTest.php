@@ -49,6 +49,21 @@ class ValidatorTest extends TestCase
         ];
     }
 
+    public function tooMuchDataValidatorsProvider(): array
+    {
+        return [
+            [
+                [
+                    ['id' => 'int'],
+                ],
+                [
+                    'id' => 1,
+                    'name' => 'a'
+                ],
+            ],
+        ];
+    }
+
     public function test_validatorWithEmptyRules()
     {
         $factory = Factory::getServerRequestFactory();
@@ -113,4 +128,20 @@ class ValidatorTest extends TestCase
         $valid = $validateMethod->invoke($middleWare, $validators, $data);
         $this->assertFalse($valid);
     }
+
+    /**
+     * @dataProvider tooMuchDataValidatorsProvider
+     * @param array $validators
+     * @param array $data
+     * @return void
+     */
+    public function test_validatorValidateMethod_tooMuchData(array $validators, array $data)
+    {
+        $validateMethod = self::getMethod('validate');
+        $middleWare = new Validator($validators);
+        $valid = $validateMethod->invoke($middleWare, $validators, $data);
+        $this->assertFalse($valid);
+    }
+
+
 }

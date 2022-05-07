@@ -33,4 +33,9 @@ class Validator implements MiddlewareInterface
         }
         return $handler->handle($request);
     }
+
+    protected function validate(array $rules, array $data): bool
+    {
+        return true;
+    }
 }

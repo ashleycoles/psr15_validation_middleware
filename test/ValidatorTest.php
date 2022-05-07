@@ -13,6 +13,13 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class ValidatorTest extends TestCase
 {
+    protected static function getMethod($name)
+    {
+        $class = new ReflectionClass(Validator::class);
+        $method = $class->getMethod($name);
+        $method->setAccessible(true);
+        return $method;
+    }
 
     public function validValidatorsProvider(): array
     {
@@ -63,5 +70,19 @@ class ValidatorTest extends TestCase
                 $this->assertInstanceOf(ServerRequestInterface::class, $request);
             }
         ], $requestWithData);
+    }
+
+    /**
+     * @dataProvider validValidatorsProvider
+     * @param array $validators
+     * @param array $data
+     */
+    public function test_validatorValidateValid(array $validators, array $data)
+    {
+        $validateMethod = self::getMethod('validate');
+        $middleWare = new Validator($validators);
+        $valid = $validateMethod->invoke($middleWare, $validators, $data);
+        $this->assertTrue($valid);
+
     }
 }

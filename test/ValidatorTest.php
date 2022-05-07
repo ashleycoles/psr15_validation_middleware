@@ -120,7 +120,7 @@ class ValidatorTest extends TestCase
     /**
      * @return void
      */
-    public function test_validatorWithEmptyRules(): void
+    public function test_validatorProcess_emptyRules(): void
     {
         $factory = Factory::getServerRequestFactory();
         $request = $factory->createServerRequest('POST', '/');
@@ -142,7 +142,7 @@ class ValidatorTest extends TestCase
      * @param array $validators
      * @param array $data
      */
-    public function test_validatorWithValidData(array $validators, array $data): void
+    public function test_validatorProcess_validData(array $validators, array $data): void
     {
         $factory = Factory::getServerRequestFactory();
         $request = $factory->createServerRequest('POST', '/');
@@ -156,7 +156,6 @@ class ValidatorTest extends TestCase
             }
         ], $requestWithData);
     }
-
 
     /**
      * @dataProvider emptyDataValidatorsProvider

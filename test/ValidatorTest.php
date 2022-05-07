@@ -103,8 +103,8 @@ class ValidatorTest extends TestCase
             $middleWare,
             function (ServerRequestInterface $request) {
                 $this->assertEquals(
-                    'No rules set.',
-                    $request->getAttribute('error')
+                    ['No rules set.'],
+                    $request->getAttribute('errors')
                 );
             }
         ], $request);
@@ -202,6 +202,30 @@ class ValidatorTest extends TestCase
         $middleWare = new Validator($validators);
         $valid = $validateMethod->invoke($middleWare, $validators, $data);
         $this->assertFalse($valid);
+    }
+
+    /**
+     * @dataProvider notIntDataValidatorsProvider
+     * @param array $validators
+     * @param array $data
+     * @return void
+     */
+    public function test_validatorProcess_withInvalidSingleInt(array $validators, array $data): void
+    {
+        $factory = Factory::getServerRequestFactory();
+        $request = $factory->createServerRequest('POST', '/');
+        $requestWithData = $request->withParsedBody($data);
+        $middleWare = new Validator($validators);
+
+        Dispatcher::run([
+            $middleWare,
+            function (ServerRequestInterface $request) {
+                $this->assertEquals(
+                    ['id: Must be of type integer'],
+                    $request->getAttribute('errors')
+                );
+            }
+        ], $requestWithData);
     }
 
 

@@ -15,6 +15,10 @@ class Validator implements MiddlewareInterface
      */
     protected array $rules;
 
+    protected array $errors;
+
+    protected ServerRequestInterface $request;
+
     /**
      * @param array<string, string> $rules
      */
@@ -32,7 +36,18 @@ class Validator implements MiddlewareInterface
     ): ResponseInterface
     {
         if (empty($this->rules)) {
-            $request = $request->withAttribute('error', 'No rules set.');
+            $this->addError('No rules set.');
+            $request = $request->withAttribute('errors', $this->errors);
+            return $handler->handle($request);
+        }
+
+        $this->request = $request;
+
+        $data = $this->request->getParsedBody();
+
+        if (!$this->validate($this->rules, $data)) {
+            $request = $request->withAttribute('errors', $this->errors);
+            return $handler->handle($request);
         }
 
         return $handler->handle($request);
@@ -50,12 +65,17 @@ class Validator implements MiddlewareInterface
         }
 
         foreach ($rules as $field => $type) {
-            var_dump(gettype($data[$field]));
             if (gettype($data[$field]) !== $type) {
+                $this->addError("$field: Must be of type $type");
                 return false;
             }
         }
 
         return true;
+    }
+
+    protected function addError(string $error): void
+    {
+        $this->errors[] = $error;
     }
 }

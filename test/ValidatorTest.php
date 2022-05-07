@@ -8,7 +8,6 @@ use Middlewares\Utils\Dispatcher;
 use Middlewares\Utils\Factory;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ServerRequestFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use ValidationMiddleware\Validator;
 

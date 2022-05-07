@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ValidationMiddleware;
 
+use http\Env\Request;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -19,11 +20,13 @@ class Validator implements MiddlewareInterface
     /**
      * @var array<string>
      */
-    protected array $errors;
+    protected array $errors = [];
 
     protected ServerRequestInterface $request;
 
     protected bool $valid = true;
+
+    protected RequestHandlerInterface $handler;
 
     /**
      * @param array<string, string> $rules
@@ -40,36 +43,33 @@ class Validator implements MiddlewareInterface
         ServerRequestInterface $request,
         RequestHandlerInterface $handler
     ): ResponseInterface {
-        if (empty($this->rules)) {
-            $this->addError('No rules set.');
-            $request = $request->withAttribute('errors', $this->errors);
-            return $handler->handle($request);
-        }
 
         $this->request = $request;
+        $this->handler = $handler;
+
+        if (empty($this->rules)) {
+            $this->addError('No rules set.');
+            return $this->handleRequest();
+        }
 
         $data = $this->request->getParsedBody();
 
-        if (!$this->validate($this->rules, $data)) {
-            $request = $request->withAttribute('errors', $this->errors);
-            return $handler->handle($request);
-        }
+        $this->validate($data);
 
-        return $handler->handle($request);
+        return $this->handleRequest();
     }
 
     /**
-     * @param array<string, string> $rules
      * @param object|array<string, string>|null $data
      * @return bool
      */
-    protected function validate(array $rules, object|array|null $data): bool
+    protected function validate(object|array|null $data): bool
     {
-        if ((!is_array($data)) || empty($data) || count($rules) !== count($data)) {
+        if ((!is_array($data)) || empty($data) || count($this->rules) !== count($data)) {
             return false;
         }
 
-        foreach ($rules as $field => $type) {
+        foreach ($this->rules as $field => $type) {
             if (gettype($data[$field]) !== $type) {
                 $this->addError("$field: Must be of type $type");
                 $this->valid = false;
@@ -82,5 +82,11 @@ class Validator implements MiddlewareInterface
     protected function addError(string $error): void
     {
         $this->errors[] = $error;
+    }
+
+    protected function handleRequest(): ResponseInterface
+    {
+        $request = $this->request->withAttribute('errors', $this->errors);
+        return $this->handler->handle($request);
     }
 }

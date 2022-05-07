@@ -135,6 +135,7 @@ class ValidatorTest extends TestCase
      * @param array $validators
      * @param array $data
      * @return void
+     * @throws ReflectionException
      */
     public function test_validatorValidateMethod_emptyData(array $validators, array $data): void
     {
@@ -149,6 +150,7 @@ class ValidatorTest extends TestCase
      * @param array $validators
      * @param array $data
      * @return void
+     * @throws ReflectionException
      */
     public function test_validatorValidateMethod_tooMuchData(array $validators, array $data): void
     {
@@ -163,6 +165,7 @@ class ValidatorTest extends TestCase
      * @param array $validators
      * @param array $data
      * @return void
+     * @throws ReflectionException
      */
     public function test_validatorValidateMethod_tooLittleData(array $validators, array $data): void
     {

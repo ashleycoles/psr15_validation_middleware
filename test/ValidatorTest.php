@@ -14,6 +14,11 @@ use ValidationMiddleware\Validator;
 class ValidatorTest extends TestCase
 {
     /**
+     * Helper to temporarily test protected methods.
+     *
+     * This test suite should only test public behaviours, so specific implementation tests
+     * of protected/private methods should be removed once the method is finished.
+     *
      * @throws ReflectionException
      */
     protected static function getMethod($name): ReflectionMethod
@@ -24,7 +29,7 @@ class ValidatorTest extends TestCase
         return $method;
     }
 
-    public function validValidatorsProvider(): array
+    public function provider_validValidators(): array
     {
         return [
             [
@@ -44,7 +49,7 @@ class ValidatorTest extends TestCase
         ];
     }
 
-    public function emptyDataValidatorsProvider(): array
+    public function provider_emptyDataValidators(): array
     {
         return [
             [
@@ -56,7 +61,7 @@ class ValidatorTest extends TestCase
         ];
     }
 
-    public function tooMuchDataValidatorsProvider(): array
+    public function provider_tooMuchDataValidators(): array
     {
         return [
             [
@@ -72,7 +77,7 @@ class ValidatorTest extends TestCase
         ];
     }
 
-    public function tooLittleDataValidatorsProvider(): array
+    public function provider_tooLittleDataValidators(): array
     {
         return [
             [
@@ -87,7 +92,7 @@ class ValidatorTest extends TestCase
         ];
     }
 
-    public function notIntDataValidatorsProvider(): array
+    public function provider_notIntDataValidators(): array
     {
         return [
             [
@@ -101,7 +106,7 @@ class ValidatorTest extends TestCase
         ];
     }
 
-    public function twoNotIntsDataValidatorsProvider(): array
+    public function provider_twoNotIntsDataValidators(): array
     {
         return [
             [
@@ -138,7 +143,7 @@ class ValidatorTest extends TestCase
     }
 
     /**
-     * @dataProvider validValidatorsProvider
+     * @dataProvider provider_validValidators
      * @param array $validators
      * @param array $data
      */
@@ -158,7 +163,7 @@ class ValidatorTest extends TestCase
     }
 
     /**
-     * @dataProvider emptyDataValidatorsProvider
+     * @dataProvider provider_emptyDataValidators
      * @param array $validators
      * @param array $data
      * @return void
@@ -180,7 +185,7 @@ class ValidatorTest extends TestCase
     }
 
     /**
-     * @dataProvider tooMuchDataValidatorsProvider
+     * @dataProvider provider_tooMuchDataValidators
      * @param array $validators
      * @param array $data
      * @return void
@@ -202,7 +207,7 @@ class ValidatorTest extends TestCase
     }
 
     /**
-     * @dataProvider tooLittleDataValidatorsProvider
+     * @dataProvider provider_tooLittleDataValidators
      * @param array $validators
      * @param array $data
      * @return void
@@ -224,7 +229,7 @@ class ValidatorTest extends TestCase
     }
 
     /**
-     * @dataProvider notIntDataValidatorsProvider
+     * @dataProvider provider_notIntDataValidators
      * @param array $validators
      * @param array $data
      * @return void
@@ -248,7 +253,7 @@ class ValidatorTest extends TestCase
     }
 
     /**
-     * @dataProvider twoNotIntsDataValidatorsProvider
+     * @dataProvider provider_twoNotIntsDataValidators
      * @param array $validators
      * @param array $data
      * @return void

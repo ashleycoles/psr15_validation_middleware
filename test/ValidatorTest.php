@@ -79,7 +79,7 @@ class ValidatorTest extends TestCase
         ];
     }
 
-    public function test_validatorWithEmptyRules()
+    public function test_validatorWithEmptyRules(): void
     {
         $factory = Factory::getServerRequestFactory();
         $request = $factory->createServerRequest('POST', '/');
@@ -101,7 +101,7 @@ class ValidatorTest extends TestCase
      * @param array $validators
      * @param array $data
      */
-    public function test_validatorWithValidData(array $validators, array $data)
+    public function test_validatorWithValidData(array $validators, array $data): void
     {
         $factory = Factory::getServerRequestFactory();
         $request = $factory->createServerRequest('POST', '/');
@@ -122,7 +122,7 @@ class ValidatorTest extends TestCase
      * @param array $data
      * @throws ReflectionException
      */
-    public function test_validatorValidateMethod_validData(array $validators, array $data)
+    public function test_validatorValidateMethod_validData(array $validators, array $data): void
     {
         $validateMethod = self::getMethod('validate');
         $middleWare = new Validator($validators);
@@ -136,7 +136,7 @@ class ValidatorTest extends TestCase
      * @param array $data
      * @return void
      */
-    public function test_validatorValidateMethod_emptyData(array $validators, array $data)
+    public function test_validatorValidateMethod_emptyData(array $validators, array $data): void
     {
         $validateMethod = self::getMethod('validate');
         $middleWare = new Validator($validators);
@@ -164,7 +164,7 @@ class ValidatorTest extends TestCase
      * @param array $data
      * @return void
      */
-    public function test_validatorValidateMethod_tooLittleData(array $validators, array $data)
+    public function test_validatorValidateMethod_tooLittleData(array $validators, array $data): void
     {
         $validateMethod = self::getMethod('validate');
         $middleWare = new Validator($validators);

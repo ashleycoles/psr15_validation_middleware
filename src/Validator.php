@@ -15,6 +15,9 @@ class Validator implements MiddlewareInterface
      */
     protected array $rules;
 
+    /**
+     * @var array<string>
+     */
     protected array $errors;
 
     protected ServerRequestInterface $request;
@@ -45,6 +48,7 @@ class Validator implements MiddlewareInterface
 
         $this->request = $request;
 
+
         $data = $this->request->getParsedBody();
 
         if (!$this->validate($this->rules, $data)) {
@@ -57,12 +61,12 @@ class Validator implements MiddlewareInterface
 
     /**
      * @param array<string, string> $rules
-     * @param array<string, mixed> $data
+     * @param object|array<string, string>|null $data
      * @return bool
      */
-    protected function validate(array $rules, array $data): bool
+    protected function validate(array $rules, object|array|null $data): bool
     {
-        if (empty($data) || count($rules) !== count($data)) {
+        if ((!is_array($data)) || empty($data) || count($rules) !== count($data)) {
             return false;
         }
 

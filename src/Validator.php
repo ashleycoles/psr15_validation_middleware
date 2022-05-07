@@ -10,10 +10,13 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class Validator implements MiddlewareInterface
 {
+    /**
+     * @var array<string, string>
+     */
     protected array $rules;
 
     /**
-     * @param array $rules
+     * @param array<string, string> $rules
      */
     public function __construct(array $rules)
     {
@@ -35,6 +38,11 @@ class Validator implements MiddlewareInterface
         return $handler->handle($request);
     }
 
+    /**
+     * @param array<string, string> $rules
+     * @param array<string, mixed> $data
+     * @return bool
+     */
     protected function validate(array $rules, array $data): bool
     {
         if (empty($data) || count($rules) !== count($data)) {

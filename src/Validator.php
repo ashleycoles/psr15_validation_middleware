@@ -49,6 +49,13 @@ class Validator implements MiddlewareInterface
             return false;
         }
 
+        foreach ($rules as $field => $type) {
+            var_dump(gettype($data[$field]));
+            if (gettype($data[$field]) !== $type) {
+                return false;
+            }
+        }
+
         return true;
     }
 }

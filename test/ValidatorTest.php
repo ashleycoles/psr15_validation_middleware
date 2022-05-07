@@ -28,7 +28,7 @@ class ValidatorTest extends TestCase
         return [
             [
                 [
-                    ['id' => 'int'],
+                    'id' => 'integer',
                 ],
                 [
                     'id' => 1,
@@ -42,7 +42,7 @@ class ValidatorTest extends TestCase
         return [
             [
                 [
-                    ['id' => 'int'],
+                    'id' => 'integer',
                 ],
                 [],
             ],
@@ -54,7 +54,7 @@ class ValidatorTest extends TestCase
         return [
             [
                 [
-                    ['id' => 'int'],
+                    'id' => 'integer',
                 ],
                 [
                     'id' => 1,
@@ -69,11 +69,25 @@ class ValidatorTest extends TestCase
         return [
             [
                 [
-                    ['id' => 'int'],
-                    ['name' => 'string']
+                    'id' => 'integer',
+                    'name' => 'string'
                 ],
                 [
                     'id' => 1
+                ],
+            ],
+        ];
+    }
+
+    public function notIntDataValidatorsProvider(): array
+    {
+        return [
+            [
+                [
+                    'id' => 'integer',
+                ],
+                [
+                    'id' => 'a'
                 ],
             ],
         ];
@@ -168,6 +182,21 @@ class ValidatorTest extends TestCase
      * @throws ReflectionException
      */
     public function test_validatorValidateMethod_tooLittleData(array $validators, array $data): void
+    {
+        $validateMethod = self::getMethod('validate');
+        $middleWare = new Validator($validators);
+        $valid = $validateMethod->invoke($middleWare, $validators, $data);
+        $this->assertFalse($valid);
+    }
+
+    /**
+     * @dataProvider notIntDataValidatorsProvider
+     * @param array $validators
+     * @param array $data
+     * @return void
+     * @throws ReflectionException
+     */
+    public function test_validatorValidateMethod_singleDataNotInt(array $validators, array $data): void
     {
         $validateMethod = self::getMethod('validate');
         $middleWare = new Validator($validators);

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 require_once 'src/Validator.php';
 
-use GuzzleHttp\Psr7\ServerRequest;
 use Middlewares\Utils\Dispatcher;
 use Middlewares\Utils\Factory;
 use PHPUnit\Framework\TestCase;
@@ -13,7 +12,10 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class ValidatorTest extends TestCase
 {
-    protected static function getMethod($name)
+    /**
+     * @throws ReflectionException
+     */
+    protected static function getMethod($name): ReflectionMethod
     {
         $class = new ReflectionClass(Validator::class);
         $method = $class->getMethod($name);
@@ -76,13 +78,13 @@ class ValidatorTest extends TestCase
      * @dataProvider validValidatorsProvider
      * @param array $validators
      * @param array $data
+     * @throws ReflectionException
      */
-    public function test_validatorValidateValid(array $validators, array $data)
+    public function test_validatorValidateMethod_validData(array $validators, array $data)
     {
         $validateMethod = self::getMethod('validate');
         $middleWare = new Validator($validators);
         $valid = $validateMethod->invoke($middleWare, $validators, $data);
         $this->assertTrue($valid);
-
     }
 }

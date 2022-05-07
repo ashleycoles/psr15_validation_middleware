@@ -40,7 +40,7 @@ class Validator implements MiddlewareInterface
             return false;
         }
 
-        if (count($rules) < count($data)) {
+        if (count($rules) !== count($data)) {
             return false;
         }
 

@@ -19,10 +19,10 @@
             "@phpcs",
             "@phpstan"
         ],
-        "phpunit": "phpunit test/",
-        "phpcs": "phpcs --standard=psr12 src/",
+        "phpunit": "phpunit",
+        "phpcs": "phpcs",
         "phpcbf": "phpcbf --standard=psr12 src/",
-        "phpstan": "phpstan analyse --level 9 src/"
+        "phpstan": "phpstan"
     },
     "authors": [
         {

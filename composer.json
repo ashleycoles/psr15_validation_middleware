@@ -1,6 +1,7 @@
 {
     "name": "ashleyc/validation-middleware",
-    "description": "A simple PSR-15 HTTP compliant middleware.",
+    "description": "A simple PSR-15 HTTP compliant validation middleware.",
+    "homepage": "https://github.com/ashleycoles/tdd-validation_middleware",
     "require": {
         "psr/http-message": "^1.0",
         "psr/http-server-middleware": "^1.0"

@@ -131,6 +131,22 @@ class ValidatorTest extends TestCase
         ];
     }
 
+    public function provider_mismatchedDataValidators(): array
+    {
+        return [
+            [
+                [
+                    'id' => 'integer',
+                    'id2' => 'integer',
+                ],
+                [
+                    'id3' => 'a',
+                    'id4' => 'b'
+                ],
+            ],
+        ];
+    }
+
     /**
      * @return void
      */
@@ -263,6 +279,30 @@ class ValidatorTest extends TestCase
             $middleWare,
             function (ServerRequestInterface $request) {
                 $expected = ['id: Must be of type integer', 'id2: Must be of type integer'];
+                $this->assertEquals($expected, $request->getAttribute('errors'));
+            }
+        ], $requestWithData);
+    }
+
+    /**
+     * @dataProvider provider_mismatchedDataValidators
+     * @param array $validators
+     * @param array $data
+     * @return void
+     */
+    public function test_validatorProcess_withMismatchedData(array $validators, array $data): void
+    {
+        $requestWithData = $this->serverRequest->withParsedBody($data);
+        $middleWare = new Validator($validators);
+        Dispatcher::run([
+            $middleWare,
+            function (ServerRequestInterface $request) {
+                $expected = [
+                    'id: Field missing.',
+                    'id2: Field missing.',
+                    'id3: Does not match data format.',
+                    'id4: Does not match data format.'
+                ];
                 $this->assertEquals($expected, $request->getAttribute('errors'));
             }
         ], $requestWithData);

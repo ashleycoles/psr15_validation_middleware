@@ -26,7 +26,7 @@ Validation rules must be passed into the `Validator` upon instantiation in the f
 
 The array keys should be the field names, and the array values should be the validation rules. 
 
-At the moment this package only support validation based on built in simple datatypes.
+At the moment this package only supports validation based on built in simple datatypes.
 
 ```php
 $validationRules = [

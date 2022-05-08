@@ -298,8 +298,8 @@ class ValidatorTest extends TestCase
             $middleWare,
             function (ServerRequestInterface $request) {
                 $expected = [
-                    'id: Field missing.',
-                    'id2: Field missing.',
+                    'id: Required field missing.',
+                    'id2: Required field missing.',
                     'id3: Does not match data format.',
                     'id4: Does not match data format.'
                 ];

@@ -70,31 +70,12 @@ class Validator implements MiddlewareInterface
 
         $valid = true;
 
-        $ruleDataComparison = count($this->rules) <=> count($data);
-
-        // More rules than data items
-        if ($ruleDataComparison === 1) {
-            $missingDataItems = array_diff_key($this->rules, $data);
-            foreach ($missingDataItems as $field => $item) {
-                $this->addError("$field: Required field missing.");
-            }
-            return false;
-        }
-
-        // More data than rules
-        if ($ruleDataComparison === -1) {
-            $extraDataItems = array_diff_key($data, $this->rules);
-
-            foreach ($extraDataItems as $field => $item) {
-                $this->addError("$field: Does not match data format.");
-                $valid = false;
-            }
-            return $valid;
-        }
-
         foreach ($this->rules as $ruleField => $ruleType) {
             if (!array_key_exists($ruleField, $data)) {
-                $this->addError("$ruleField: Field missing.");
+                $this->addError("$ruleField: Required field missing.");
+                $valid = false;
+            } elseif (gettype($data[$ruleField]) !== $ruleType) {
+                $this->addError("$ruleField: Must be of type $ruleType");
                 $valid = false;
             }
         }
@@ -106,13 +87,6 @@ class Validator implements MiddlewareInterface
             }
         }
 
-        // Equal number of data items
-        foreach ($this->rules as $field => $type) {
-            if (isset($data[$field]) && gettype($data[$field]) !== $type) {
-                $this->addError("$field: Must be of type $type");
-                $valid = false;
-            }
-        }
         return $valid;
     }
 

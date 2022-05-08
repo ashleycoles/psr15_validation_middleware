@@ -46,13 +46,15 @@ class ValidatorTest extends TestCase
                     'id' => 'integer',
                     'name' => 'string',
                     'online' => false,
-                    'lifetime' => 'double'
+                    'lifetime' => 'double',
+                    'friends' => 'array'
                 ],
                 [
                     'id' => 1,
                     'name' => 'steve',
                     'online' => 'boolean',
-                    'lifetime' => 12.7654
+                    'lifetime' => 12.7654,
+                    'friends' => []
                 ],
             ],
         ];

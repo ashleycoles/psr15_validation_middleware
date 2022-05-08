@@ -173,7 +173,7 @@ class ValidatorTest extends TestCase
         Dispatcher::run([
             $middleWare,
             function (RequestInterface $request) {
-                $this->assertInstanceOf(ServerRequestInterface::class, $request);
+                $this->assertEmpty($request->getAttribute('errors'));
             }
         ], $requestWithData);
     }

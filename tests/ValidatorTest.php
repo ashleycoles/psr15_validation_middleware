@@ -103,15 +103,21 @@ class ValidatorTest extends TestCase
         ];
     }
 
-    public function provider_notIntDataValidators(): array
+    public function provider_multipleIncorrectTypes(): array
     {
         return [
             [
                 [
                     'id' => 'integer',
+                    'name' => 'string',
+                    'active' => 'boolean',
+                    'friends' => 'array',
                 ],
                 [
-                    'id' => 'a'
+                    'id' => 'a',
+                    'name' => [],
+                    'active' => 'hello',
+                    'friends' => false
                 ],
             ],
         ];
@@ -246,12 +252,12 @@ class ValidatorTest extends TestCase
     }
 
     /**
-     * @dataProvider provider_notIntDataValidators
+     * @dataProvider provider_multipleIncorrectTypes
      * @param array $validators
      * @param array $data
      * @return void
      */
-    public function test_validatorProcess_withInvalidSingleInt(array $validators, array $data): void
+    public function test_validatorProcess_withMultipleIncorrectTypes(array $validators, array $data): void
     {
         $requestWithData = $this->serverRequest->withParsedBody($data);
         $middleWare = new Validator($validators);
@@ -260,7 +266,12 @@ class ValidatorTest extends TestCase
             $middleWare,
             function (ServerRequestInterface $request) {
                 $this->assertEquals(
-                    ['id: Must be of type integer.'],
+                    [
+                        'id: Must be of type integer.',
+                        'name: Must be of type string.',
+                        'active: Must be of type boolean.',
+                        'friends: Must be of type array.',
+                    ],
                     $request->getAttribute('errors')
                 );
             }

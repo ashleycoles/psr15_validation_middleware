@@ -112,32 +112,19 @@ class ValidatorTest extends TestCase
                     'name' => 'string',
                     'active' => 'boolean',
                     'friends' => 'array',
+                    'test' => 'string'
                 ],
                 [
                     'id' => 'a',
                     'name' => [],
                     'active' => 'hello',
-                    'friends' => false
+                    'friends' => false,
+                    'test' => 'testing'
                 ],
             ],
         ];
     }
 
-    public function provider_twoNotIntsDataValidators(): array
-    {
-        return [
-            [
-                [
-                    'id' => 'integer',
-                    'id2' => 'integer',
-                ],
-                [
-                    'id' => 'a',
-                    'id2' => 'b'
-                ],
-            ],
-        ];
-    }
 
     public function provider_mismatchedDataValidators(): array
     {
@@ -274,25 +261,6 @@ class ValidatorTest extends TestCase
                     ],
                     $request->getAttribute('errors')
                 );
-            }
-        ], $requestWithData);
-    }
-
-    /**
-     * @dataProvider provider_twoNotIntsDataValidators
-     * @param array $validators
-     * @param array $data
-     * @return void
-     */
-    public function test_validatorProcess_withInvalidTwoInts(array $validators, array $data): void
-    {
-        $requestWithData = $this->serverRequest->withParsedBody($data);
-        $middleWare = new Validator($validators);
-        Dispatcher::run([
-            $middleWare,
-            function (ServerRequestInterface $request) {
-                $expected = ['id: Must be of type integer.', 'id2: Must be of type integer.'];
-                $this->assertEquals($expected, $request->getAttribute('errors'));
             }
         ], $requestWithData);
     }

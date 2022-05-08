@@ -258,7 +258,7 @@ class ValidatorTest extends TestCase
             $middleWare,
             function (ServerRequestInterface $request) {
                 $this->assertEquals(
-                    ['id: Must be of type integer'],
+                    ['id: Must be of type integer.'],
                     $request->getAttribute('errors')
                 );
             }
@@ -278,7 +278,7 @@ class ValidatorTest extends TestCase
         Dispatcher::run([
             $middleWare,
             function (ServerRequestInterface $request) {
-                $expected = ['id: Must be of type integer', 'id2: Must be of type integer'];
+                $expected = ['id: Must be of type integer.', 'id2: Must be of type integer.'];
                 $this->assertEquals($expected, $request->getAttribute('errors'));
             }
         ], $requestWithData);

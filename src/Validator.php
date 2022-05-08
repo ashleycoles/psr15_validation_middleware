@@ -75,7 +75,7 @@ class Validator implements MiddlewareInterface
                 $this->addError("$ruleField: Required field missing.");
                 $valid = false;
             } elseif (gettype($data[$ruleField]) !== $ruleType) {
-                $this->addError("$ruleField: Must be of type $ruleType");
+                $this->addError("$ruleField: Must be of type $ruleType.");
                 $valid = false;
             }
         }
